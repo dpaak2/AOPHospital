@@ -2,9 +2,7 @@
 	pageEncoding="UTF-8"%>
 <ul id="commonGnb" style="height: 40px">
 	<li><a>회원가입</a></li>
-	<li><a>고객:로그인</a></li>
-	<li><a>스탭:로그인</a></li>
-	<li><a>관리자:로그인</a></li>
+	<li><a>로그인</a></li>
 	<li><a>게시판</a></li>
 	<li>
 		<div class="tooltip">
@@ -23,21 +21,12 @@
 						});
 		commonGnb.find('li:nth-child(2)').click (function() {
 			alert('로그인');
-			goPage('${context.path}/patient/login');
+			goPage('${context.path}/login');
 		});
 		commonGnb.find('li:nth-child(3)').click(function() {
-	    	alert('의사 login');
-			goPage('${context.path}/doctor/login');
-		}); 
-		commonGnb.find('li:nth-child(4)').click(function() { 
-	    	alert('staff login');
-			goPage('${context.path}/admin/login');
-		}); 
-		commonGnb.find('li:nth-child(5)').click(function() {
 			alert('board');
 			goList('${context.path}/board/list'); /*board의 list는 메인이다*/
 		});
-
 	});
 
 </script>

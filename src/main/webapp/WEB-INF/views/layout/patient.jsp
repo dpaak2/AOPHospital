@@ -11,10 +11,10 @@
 <head>
 <meta charset="UTF-8" />
 <title><tiles:getAsString name="title"></tiles:getAsString></title>
-<link rel="stylsheet" href="${context.css}/hanbit.css"></link>
+<link rel="stylsheet" href="${context.css}/hanbit.css"/>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="${context.js}/patient.js"></script>
+<script src="${context.js}/hospital.js"></script>
 
 </head>
 <body>
