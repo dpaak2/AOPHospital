@@ -153,7 +153,7 @@ $(function() {
 	var $registerForm=$('#registerForm');
 	var tab=$registerForm.find('table');  /* registerForm 자손중에 table 인것 찾는거쇼 */
 	$().click(function() {
-		$registerForm.attr('action','${context}/patient.do');
+		$registerForm.attr('action','${context.path}/patient/join');
 		$registerForm.attr('method','post');
 		alert('전송직전');
 		$registerForm.submit();

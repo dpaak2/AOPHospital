@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.hospital.web.domain.Doctor;
 import com.hospital.web.domain.Info;
+import com.hospital.web.domain.Nurse;
 import com.hospital.web.domain.Patient;
 import com.hospital.web.domain.Person;
-import com.hospital.web.domain.Schema;
+import com.hospital.web.domain.Enums;
 import com.hospital.web.mapper.Mapper;
 import com.hospital.web.service.CRUD;
 
@@ -67,16 +68,16 @@ public class PermissionController {
 			patient.setPass(password);
 			Map<String, Object> map = new HashMap<>();
 			map.put("group", patient.getGroup());
-			map.put("key", Schema.PATIENT.getName());
+			map.put("key", Enums.PATIENT.getName());
 			map.put("value", id);
 			CRUD.Service ex = new CRUD.Service() {
 				@Override
-				public Object excute(Object o) throws Exception {
+				public Object execute(Object o) throws Exception {
 					logger.info("=======what is ID?{}====", o);
 					return mapper.exist(map);
 				}
 			};
-			Integer count = (Integer) ex.excute(id);
+			Integer count = (Integer) ex.execute(id);
 			logger.info("Dose id exsit at DB? () {}", count);
 
 			if (count == 0) {
@@ -88,23 +89,22 @@ public class PermissionController {
 				CRUD.Service service = new CRUD.Service() {
 
 					@Override
-					public Object excute(Object o) throws Exception {
-						return mapper.findPatient((HashMap<?, ?>) map);
+					public Object execute(Object o) throws Exception {
+						return mapper.findPatient(map);
 					}
 				};
 				logger.info("DB RESULT: {}", "success");
-				patient= (Patient) service.excute(patient);
+				patient = (Patient) service.execute(patient);
 				if (patient.getPass().equals(password)) {
 					session.setAttribute("permission", patient);
-					model.addAttribute("patient",
-							patient); /* patient에 patient객체를 넣어줌 */
+					model.addAttribute("user",patient); /* patient에 patient객체를 넣어줌 */
 					movePostion = "patient:patient/containerDetail";
 				} else {
 					logger.info("DB RESULT: {}", "password not match");
 					movePostion = "public:common/loginForm";
 
 				}
-				patient = (Patient) service.excute(patient); /* db연결 */
+				patient = (Patient) service.execute(patient); /* db연결 */
 
 			}
 			break;
@@ -116,16 +116,16 @@ public class PermissionController {
 			doctor.setPass(password);
 			Map<String, Object> docMap = new HashMap<>();
 			docMap.put("group", doctor.getGroup());
-			docMap.put("key", Schema.DOCTOR.getName());
+			docMap.put("key", Enums.DOCTOR.getName());
 			docMap.put("value", id);
 			CRUD.Service docEx = new CRUD.Service() {
 				@Override
-				public Object excute(Object o) throws Exception {
+				public Object execute(Object o) throws Exception {
 					logger.info("===ID ? : {}===", o);
 					return mapper.exist(docMap);
 				}
 			};
-			Integer docCount = (Integer) docEx.excute(id);
+			Integer docCount = (Integer) docEx.execute(id);
 			logger.info("ID exist? : {}", docCount);
 
 			if (docCount == 0) {
@@ -135,11 +135,11 @@ public class PermissionController {
 
 				CRUD.Service service = new CRUD.Service() {
 					@Override
-					public Object excute(Object o) throws Exception {
-						return mapper.findDoctor((HashMap<?, ?>) docMap);
+					public Object execute(Object o) throws Exception {
+						return mapper.findDoctor(docMap);
 					}
 				};
-				doctor = (Doctor) service.excute(doctor);
+				doctor = (Doctor) service.execute(doctor);
 
 				if (doctor.getPass().equals(password)) {
 					logger.info("DB RESULT : {}", "success");
@@ -152,18 +152,62 @@ public class PermissionController {
 				}
 			}
 			break;
-		case "Nurse":
-			break;
-			
-		}
+		case "nurse":
+			Person<?> nurPerson = new Person<Info>(new Nurse());
+			Nurse nurse = (Nurse) nurPerson.getInfo();
+			nurse.setId(id);
+			nurse.setPass(password);
+			Map<String, Object> nurMap = new HashMap<>(); /* nurse 값을 받아주는곳 */
+			nurMap.put("group", nurse.getGroup());
+			nurMap.put("key", Enums.NURSE.getName());
+			nurMap.put("value", id);
+			CRUD.Service nurEx = new CRUD.Service() {
+				@Override
+				public Object execute(Object o) throws Exception {
+					logger.info("===ID ? : {}===", o);
+					return mapper.exist(nurMap);
+				}
+			};
+			Integer nurCount = (Integer) nurEx.execute(id);
+			logger.info("ID exist? : {}", nurCount);
 
-		/* int count=service.count(); 존재여부를 확인 serviceImpl */
+			if (nurCount == 0) {
+				logger.info("DB RESULT : {}", "ID not exist");
+				movePostion = "public:common/loginForm";
+			} else {
+
+				CRUD.Service service = new CRUD.Service() {
+					@Override
+					public Object execute(Object o) throws Exception {
+						return mapper.findNurse(nurMap);
+					}
+				};
+				nurse = (Nurse) service.execute(nurse);
+
+				if (nurse.getPass().equals(password)) {
+					logger.info("DB RESULT : {}", "success");
+					session.setAttribute("permission", nurse);
+					model.addAttribute("nurse", nurse);
+					movePostion = "nurse:nurse/containerList";
+				} else {
+					logger.info("DB RESULT : {}", "password not match");
+					movePostion = "public:common/loginForm";
+				}
+				break;
+
+			}
+
+		}
 
 		return movePostion;
 	}
+
 	@RequestMapping("/logout")
-	public String logout(HttpSession session){ /*logout */
-		session.invalidate(); /*session에 있는값을 다 지우는것 */
-		return "redirect:/"; /*다른곳을 보내는것 (/)를 사용하게 되면 경로를 알아서 쫒아간다 home controller*/
+	public String logout(HttpSession session) { /* logout */
+		session.invalidate(); /* session에 있는값을 다 지우는것 */
+		return "redirect:/"; /*
+								 * 다른곳을 보내는것 (/)를 사용하게 되면 경로를 알아서 쫒아간다 home
+								 * controller
+								 */
 	}
 }

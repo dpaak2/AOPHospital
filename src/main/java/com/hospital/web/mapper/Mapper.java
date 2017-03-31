@@ -12,12 +12,12 @@ import com.hospital.web.domain.Patient;
 import com.hospital.web.domain.Person;
 @Repository
 public interface Mapper { 
-	public int registerPatient(Patient member) throws Exception;
-	public int registerDoctor(Doctor member) throws Exception;
-	public int registerNurse(Nurse member) throws Exception;
-	public Patient findPatient(HashMap<?, ?>map) throws Exception;
-	public Doctor findDoctor(HashMap<?, ?>map) throws Exception;
-	public Nurse findtNurse(HashMap<?, ?>map) throws Exception;
+	public int registerPatient(Object o) throws Exception;
+	public int registerDoctor(Object o) throws Exception;
+	public int registerNurse(Object o) throws Exception;
+	public Patient findPatient(Map<?, ?>map) throws Exception;
+	public Doctor findDoctor(Map<?, ?>map) throws Exception;
+	public Nurse findNurse(Map<?, ?>map) throws Exception;
 	public List<Patient> findPatients(Map<?,?>map)throws Exception;
 	public List<Doctor> findDoctors(Map<?,?>map)throws Exception;
 	public List<Nurse> findNurses(Map<?,?>map)throws Exception;
